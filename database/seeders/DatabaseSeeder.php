@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+// A linha abaixo pode ser removida ou deixada, não faz diferença.
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
+
+// Não precisamos mais do "use App\Models\User;" porque não estamos mais criando usuários aqui.
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // A única coisa que faremos aqui é chamar o seeder que cria os perfis (Roles).
+        // O método 'call' é a forma correta de executar outros seeders a partir deste arquivo principal.
+        $this->call([
+            RoleSeeder::class,
         ]);
     }
 }
