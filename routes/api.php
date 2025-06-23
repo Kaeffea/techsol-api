@@ -3,18 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\InviteController; 
 
 // Rota de Login (Pública)
-Route::post('login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 
-// Esta rota de exemplo pode ser útil para testar se o token funciona
-// Qualquer um que tentar acessar /api/user sem um token válido será bloqueado
-Route::middleware('auth:sanctum')->get('/user', function (Request $request){
-    return $request->user();
+// Agrupando rotas que precisam de autenticação
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Rota para convidar colaboradores
+    Route::post('/invites', [InviteController::class, 'store']);
+
+    // Rota de exemplo para obter dados do usuário logado
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 });
-
-/*
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-*/
