@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Invitation;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvitationEmail;
 
 class InviteController extends Controller
 {
@@ -26,6 +28,7 @@ class InviteController extends Controller
         ]);
 
         // 3. Lógica de envio de email
+        Mail::to($invitation->email)->send(new InvitationEmail($invitation));
 
         // 4. Retorna uma resposta de sucesso. O status 201 significa "Recurso Criado".
         return response()->json([
