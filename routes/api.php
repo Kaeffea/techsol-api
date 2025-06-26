@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\InviteController; 
+use App\Http\Controllers\Api\InviteController;
+use App\Http\Controllers\Api\CollaboratorController; 
 
 // Rota de Login (Pública)
 Route::post('/login', [AuthController::class, 'login']);
@@ -18,6 +19,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    // Rota para listar e pesquisar colaboradores
+    Route::get('/collaborators', [CollaboratorController::class, 'index']);
 });
 
 // Rota de Registro (Pública, mas validada pelo token no controller)
