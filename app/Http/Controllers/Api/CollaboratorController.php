@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Exports\CollaboratorsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CollaboratorController extends Controller
 {
@@ -34,5 +36,20 @@ class CollaboratorController extends Controller
 
         // 5. Retorna a lista paginada como uma resposta JSON
         return response()->json($collaborators);
+    }
+
+    /**
+     * Exporta os dados dos colaboradores para um arquivo Excel.
+     */
+    public function export(Request $request)
+    {
+        $searchTerm = $request->input('search', null);
+
+        // Define o nome do arquivo que será baixado
+        $fileName = 'colaboradores_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        // Usa a facade do Excel para baixar o arquivo,
+        // passando a nossa classe de exportação e o termo de busca.
+        return Excel::download(new CollaboratorsExport($searchTerm), $fileName);
     }
 }

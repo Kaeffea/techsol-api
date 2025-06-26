@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\CollaboratorController;
 // Rota de Login (Pública)
 Route::post('/login', [AuthController::class, 'login']);
 
+// Rota de Registro (Pública, mas validada pelo token no controller)
+Route::post('/register', [AuthController::class, 'register']);
+
 // Agrupando rotas que precisam de autenticação
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -22,7 +25,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rota para listar e pesquisar colaboradores
     Route::get('/collaborators', [CollaboratorController::class, 'index']);
+    Route::get('/collaborators/export', [CollaboratorController::class, 'export']);
 });
-
-// Rota de Registro (Pública, mas validada pelo token no controller)
-Route::post('/register', [AuthController::class, 'register']);
