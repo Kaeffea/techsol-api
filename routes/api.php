@@ -26,4 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rota para listar e pesquisar colaboradores
     Route::get('/collaborators', [CollaboratorController::class, 'index']);
     Route::get('/collaborators/export', [CollaboratorController::class, 'export']);
+    Route::get('/collaborators/{user}', [CollaboratorController::class, 'show']);
+    Route::put('/collaborators/{user}', [CollaboratorController::class, 'update']); 
 });

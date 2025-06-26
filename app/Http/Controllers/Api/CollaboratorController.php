@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Exports\CollaboratorsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash; 
 
 class CollaboratorController extends Controller
 {
@@ -51,5 +54,54 @@ class CollaboratorController extends Controller
         // Usa a facade do Excel para baixar o arquivo,
         // passando a nossa classe de exportação e o termo de busca.
         return Excel::download(new CollaboratorsExport($searchTerm), $fileName);
+    }
+
+    /**
+     * Exibe os detalhes de um colaborador específico.
+     */
+    public function show(User $user)
+    {
+        // O Laravel automaticamente encontra o usuário pelo ID na URL
+        // e o injeta aqui.
+        return response()->json($user);
+    }
+
+    
+    /**
+     * Atualiza o perfil de um colaborador.
+     */
+    public function update(Request $request, User $user)
+    {
+        $loggedInUser = Auth::user();
+        $newRoleId = $request->input('role_id');
+
+        // Validação básica dos dados recebidos
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'password' => 'nullable|string|min:8', // Senha é opcional
+        ]);
+
+        // Lógica de Permissão
+        if ($loggedInUser->role->slug === 'gente-e-cultura') {
+            $adminRole = Role::where('slug', 'admin')->first();
+            if ($newRoleId == $adminRole->id) {
+                return response()->json(['message' => 'Permissão negada.'], 403);
+            }
+        }
+
+        // Atualiza o perfil do usuário
+        $user->role_id = $newRoleId;
+
+        // Se uma nova senha foi enviada, atualiza a senha
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Perfil do colaborador atualizado com sucesso!',
+            'user' => $user,
+        ]);
     }
 }
