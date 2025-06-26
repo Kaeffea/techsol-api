@@ -19,3 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 });
+
+// Rota de Registro (Pública, mas validada pelo token no controller)
+Route::post('/register', [AuthController::class, 'register']);
