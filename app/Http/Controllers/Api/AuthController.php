@@ -13,12 +13,35 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
-     * Handle a login request to the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * @OA\Post(
+     * path="/api/login",
+     * operationId="loginUser",
+     * tags={"Autenticação"},
+     * summary="Autentica um usuário e retorna um token de acesso",
+     * description="Autentica um usuário com CPF e senha.",
+     * @OA\RequestBody(
+     * required=true,
+     * description="Credenciais do usuário",
+     * @OA\JsonContent(
+     * required={"cpf","password"},
+     * @OA\Property(property="cpf", type="string", format="cpf", example="111.222.333-44"),
+     * @OA\Property(property="password", type="string", format="password", example="Password123!"),
+     * ),
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Login bem-sucedido",
+     * @OA\JsonContent(
+     * @OA\Property(property="message", type="string", example="Login bem-sucedido!"),
+     * @OA\Property(property="access_token", type="string", example="1|Abcde..."),
+     * @OA\Property(property="token_type", type="string", example="Bearer"),
+     * )
+     * ),
+     * @OA\Response(
+     * response=422,
+     * description="Erro de validação ou credenciais incorretas"
+     * )
+     * )
      */
     public function login(Request $request)
     {
@@ -53,10 +76,39 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle a registration request for a new user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     * path="/api/register",
+     * operationId="registerUser",
+     * tags={"Autenticação"},
+     * summary="Registra um novo usuário a partir de um convite",
+     * description="Finaliza o cadastro de um novo colaborador usando um token de convite válido.",
+     * @OA\RequestBody(
+     * required=true,
+     * description="Dados do novo colaborador",
+     * @OA\JsonContent(
+     * required={"token","name","cpf", "password"},
+     * @OA\Property(property="token", type="string", example="token_recebido_no_email"),
+     * @OA\Property(property="name", type="string", example="Nome Completo"),
+     * @OA\Property(property="cpf", type="string", example="123.456.789-00"),
+     * @OA\Property(property="password", type="string", example="NovaSenhaForte123!"),
+     * ),
+     * ),
+     * @OA\Response(
+     * response=201,
+     * description="Usuário cadastrado com sucesso",
+     * @OA\JsonContent(
+     * @OA\Property(property="message", type="string", example="Usuário cadastrado com sucesso!"),
+     * )
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Token de convite inválido ou expirado"
+     * ),
+     * @OA\Response(
+     * response=422,
+     * description="Erro de validação dos dados"
+     * )
+     * )
      */
     public function register(Request $request)
     {
@@ -104,5 +156,4 @@ class AuthController extends Controller
         // 7. Retorna uma resposta de sucesso
         return response()->json(['message' => 'Usuário cadastrado com sucesso!'], 201);
     }
-
 }
