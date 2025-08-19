@@ -1,61 +1,76 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Plataforma de Onboarding - TechnologySolutions
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 
-## About Laravel
+## 📖 Sobre a API
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este repositório contém o backend (API RESTful) para a plataforma de onboarding da TechnologySolutions. Desenvolvido em **Laravel 12**, ele é responsável por toda a lógica de negócios, segurança, gerenciamento de dados e comunicação com o banco de dados.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+O ambiente de desenvolvimento é totalmente conteinerizado com **Docker** e **Laravel Sail** para garantir consistência e facilidade de configuração.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+> **O repositório do Frontend (Angular) pode ser encontrado aqui:** [Link para o Repositório do Frontend](https://github.com/Kaeffea/techsol-frontend)
 
-## Learning Laravel
+## ✨ Funcionalidades
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   ✅ **Autenticação Segura:** Sistema de login baseado em token com Laravel Sanctum.
+-   ✅ **Fluxo de Convites:** Endpoints para criar convites seguros com token e tempo de expiração.
+-   ✅ **Sistema de Perfis (Roles):** Gerenciamento de perfis (Admin, Gente e Cultura, Colaborador).
+-   ✅ **Registro de Usuário:** Endpoint para finalizar o cadastro a partir de um convite válido.
+-   ✅ **Gestão de Colaboradores (CRUD):** Endpoints para Listar, Buscar, Visualizar e Atualizar colaboradores.
+-   ✅ **Exportação de Dados:** Funcionalidade para exportar a lista de colaboradores (respeitando os filtros) para um arquivo **Excel (.xlsx)**.
+-   ✅ **Documentação de API:** Geração de documentação interativa e profissional com **Swagger (OpenAPI)**.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Tecnologias Utilizadas
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   **Framework:** Laravel 12
+-   **Linguagem:** PHP 8.4
+-   **Banco de Dados:** MySQL
+-   **Ambiente:** Docker, Laravel Sail, WSL2
+-   **Dependências Chave:** `maatwebsite/excel`, `darkaonline/l5-swagger`
 
-## Laravel Sponsors
+## ⚙️ Pré-requisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   [Git](https://git-scm.com/)
+-   [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+-   [WSL2](https://learn.microsoft.com/pt-br/windows/wsl/install) (para usuários de Windows)
+-   [Composer](https://getcomposer.org/)
 
-### Premium Partners
+## 🚀 Como Executar a API
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+# 1. Clone este repositório
+git clone https://github.com/Kaeffea/techsol-api
+cd techsol-api
 
-## Contributing
+# 2. Copie o arquivo de ambiente
+cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 3. Instale as dependências do PHP com Composer
+# (O Sail iniciará os contêineres para executar o comando)
+./vendor/bin/sail composer install
 
-## Code of Conduct
+# 4. Gere a chave da aplicação
+./vendor/bin/sail artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 5. Inicie os contêineres Docker em background
+./vendor/bin/sail up -d
 
-## Security Vulnerabilities
+# 6. Rode as migrations e os seeders para criar e popular o banco
+./vendor/bin/sail artisan migrate:fresh --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 7. A API estará pronta para receber requisições!
+# URL Base: http://localhost:8888
+```
 
-## License
+## 📄 Documentação da API (Swagger)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+A documentação completa e interativa da API pode ser acessada no seguinte endereço após iniciar o ambiente:
+
+[http://localhost:8888/api/documentation](http://localhost:8888/api/documentation)
+
+## 📊 Diagrama do Banco de Dados
+
+![Diagrama do Banco de Dados](Diagrama_BD.png)
