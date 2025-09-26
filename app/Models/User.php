@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; 
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -17,17 +17,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_id', // Adicione os campos que criamos para permitir a criação em massa no futuro
         'name',
         'email',
-        'cpf',
         'password',
-        'phone_number',
-        'postal_code',
-        'street',
-        'neighborhood',
-        'city',
-        'state',
+        'cpf',
+        'role_id',
+        'regional_department_id', // <-- GARANTE QUE ESTE CAMPO SEJA SALVO
+        'operational_unit_id',    // <-- GARANTE QUE ESTE CAMPO SEJA SALVO
     ];
 
     /**
@@ -48,15 +44,32 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
     /**
-     * Define a relação com o Role.
+     * Relação: Um usuário pertence a um Perfil (Role).
      */
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Relação: Um usuário pode pertencer a um Departamento Regional.
+     */
+    public function regionalDepartment()
+    {
+        return $this->belongsTo(RegionalDepartment::class);
+    }
+
+    /**
+     * Relação: Um usuário pode pertencer a uma Unidade Operacional.
+     */
+    public function operationalUnit()
+    {
+        return $this->belongsTo(OperationalUnit::class);
     }
 }

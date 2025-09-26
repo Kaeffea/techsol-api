@@ -12,9 +12,10 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Este código cria as 3 linhas na nossa tabela 'roles'
-        Role::create(['name' => 'Administrador', 'slug' => 'admin']);
-        Role::create(['name' => 'Gente e Cultura', 'slug' => 'gente-e-cultura']);
-        Role::create(['name' => 'Colaborador Comum', 'slug' => 'colaborador']);
+        Role::create(['name' => 'Admin Nacional', 'slug' => 'national_admin']);
+        Role::create(['name' => 'Admin Regional', 'slug' => 'regional_admin']);
+        Role::create(['name' => 'Admin de Unidade', 'slug' => 'unit_admin']);
+        Role::create(['name' => 'Docente', 'slug' => 'teacher']);
+        Role::create(['name' => 'Aluno', 'slug' => 'student']);
     }
 }

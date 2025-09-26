@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Invitation extends Model
+class RegionalDepartment extends Model
 {
     use HasFactory;
 
@@ -15,10 +15,6 @@ class Invitation extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'email',
-        'token',
-        'expires_at',
-        'regional_department_id', // <-- PERMISSÃO ADICIONADA
-        'operational_unit_id',    // <-- PERMISSÃO ADICIONADA
+        'name',
     ];
 }

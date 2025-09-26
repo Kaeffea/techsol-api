@@ -11,7 +11,7 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash; 
 
-class CollaboratorController extends Controller
+class UserController extends Controller
 {
     /**
      * Exibe uma lista de colaboradores com filtros e paginação.

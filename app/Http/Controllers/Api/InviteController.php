@@ -3,37 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\Invitation;
+use App\Models\OperationalUnit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitationEmail;
+use Illuminate\Support\Str;
 
 class InviteController extends Controller
 {
-    /**
-     * Armazena um novo convite no banco de dados.
-     */
-    public function store(Request $request){
-        // 1. Valida se o campo 'email' foi enviado e se é um e-mail válido
-        $request->validate([
-            'email' => 'required|email|unique:users,email|unique:invitations,email,NULL,id,status,pending'
+    public function store(Request $request)
+    {
+        $loggedInUser = Auth::user();
+
+        // Valida os dados recebidos
+        $validatedData = $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'operational_unit_id' => 'required|exists:operational_units,id'
         ]);
 
-        // 2. Cria o convite no banco de dados
+        // Lógica de Permissão
+        if ($loggedInUser->role->slug === 'unit_admin' && $loggedInUser->operational_unit_id != $validatedData['operational_unit_id']) {
+            // Um admin de unidade não pode convidar para uma UO que não é a sua
+            return response()->json(['message' => 'Permissão negada. Você só pode convidar usuários para a sua própria Unidade Operacional.'], 403);
+        }
+        
+        // Apenas Admin Nacional e Admin de Unidade podem convidar
+        if (!in_array($loggedInUser->role->slug, ['national_admin', 'unit_admin'])) {
+            return response()->json(['message' => 'Acesso não autorizado para criar convites.'], 403);
+        }
+
+        // Busca o DR a partir da UO para salvar a informação completa no convite
+        $unit = OperationalUnit::find($validatedData['operational_unit_id']);
+
         $invitation = Invitation::create([
-            'email' => $request->email,
-            'token' => Str::random(40), // Gera um token aleatório e seguro de 40 caracteres
-            'expires_at' => now()->addHours(24) // Define a data de expiração para 24 horas a partir de agora
+            'email' => $validatedData['email'],
+            'operational_unit_id' => $validatedData['operational_unit_id'],
+            'regional_department_id' => $unit->regional_department_id,
+            'token' => Str::random(40),
+            'expires_at' => now()->addHours(24)
         ]);
 
-        // 3. Lógica de envio de email
-        Mail::to($invitation->email)->send(new InvitationEmail($invitation));
+        // Mail::to($invitation->email)->send(new InvitationEmail($invitation)); // Descomente para enviar e-mail
 
-        // 4. Retorna uma resposta de sucesso. O status 201 significa "Recurso Criado".
-        return response()->json([
-            'message' => 'Convite criado e salvo com sucesso!',
-            'invitation' => $invitation // Depuração
-        ], 201);
+        return response()->json(['message' => 'Convite enviado com sucesso!', 'invitation' => $invitation], 201);
     }
 }

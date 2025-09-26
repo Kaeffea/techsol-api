@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\InviteController;
-use App\Http\Controllers\Api\CollaboratorController; 
+use App\Http\Controllers\Api\UserController; 
+use App\Http\Controllers\Api\RegionalDepartmentController; 
+use App\Http\Controllers\Api\OperationalUnitController; 
 
 // Rota de Login (Pública)
 Route::post('/login', [AuthController::class, 'login']);
@@ -24,8 +26,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Rota para listar e pesquisar colaboradores
-    Route::get('/collaborators', [CollaboratorController::class, 'index']);
-    Route::get('/collaborators/export', [CollaboratorController::class, 'export']);
-    Route::get('/collaborators/{user}', [CollaboratorController::class, 'show']);
-    Route::put('/collaborators/{user}', [CollaboratorController::class, 'update']); 
+    Route::get('/collaborators', [UserController::class, 'index']);
+    Route::get('/collaborators/export', [UserController::class, 'export']);
+    Route::get('/collaborators/{user}', [UserController::class, 'show']);
+    Route::put('/collaborators/{user}', [UserController::class, 'update']); 
+
+    Route::apiResource('regional-departments', RegionalDepartmentController::class);
+    Route::apiResource('operational-units', OperationalUnitController::class);
 });
